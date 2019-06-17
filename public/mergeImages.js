@@ -73,34 +73,32 @@
 
         imgSelected.src = URL.createObjectURL(file);
     }
+    
+    function init(){
+        fetch('http://localhost:3000/midiakits')
+            .then(response => response.json())
+            .then(imageNames => imageNames
+                .map(imageName => './imgs/midiakit/' + imageName))
+            .then(imagePaths => {
+                listOfCanvasToApplyLogo = imagePaths.map(imagePath => {
+                    var canvas = document.createElement('canvas');
+                    var canvasContext = canvas.getContext('2d');
 
-    function handleMidiaKitsSelect(event) {
-        const imageFiles = Object.keys(event.target.files)
-            .map(key => event.target.files[key])
-            .filter(file => file.type.match('image.*'));
-        if (imageFiles.length === 0) {
-            alert('Não foi selecionado nenhum midiakit');
-            return;
-        }
-        
-        listOfCanvasToApplyLogo = imageFiles.map(imageFile => {
-            var canvas = document.createElement('canvas');
-            var canvasContext = canvas.getContext('2d');
+                    var image = new Image();
+                    image.onload = function () {
+                        canvas.width = image.width;
+                        canvas.height = image.height;
 
-            var image = new Image();
-            image.onload = function () {
-                canvas.width = image.width;
-                canvas.height = image.height;
-
-                canvasContext.drawImage(image, 0, 0);
-            };
-            image.src = URL.createObjectURL(imageFile);
-            return canvas;
-        });
-
+                        canvasContext.drawImage(image, 0, 0);
+                    };
+                    image.src = imagePath;
+                    return canvas;
+                });
+            })
     }
-
-    document.getElementById('midia-kits').onchange = handleMidiaKitsSelect;
+    
+    document.body.onload = init;
+    
     document.getElementById('files').onchange = handleFileSelect;
     document.getElementById('downloadImage').onclick = downloadImage;
     
