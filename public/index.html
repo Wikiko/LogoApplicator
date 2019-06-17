@@ -9,10 +9,14 @@
 </head>
 
 <body>
-    <canvas id="canvas" style="border: 1px solid black;"></canvas>
+<!--    <canvas id="canvas" style="border: 1px solid black;"></canvas>-->
+
+    <input id="midia-kits" multiple type="file" name="midia-kits" placeholder="Selecionar Midias Kit"/>
     <input id="files" type="file" name="file" placeholder="Selecionar Logo" />
     <button id="downloadImage">Baixar imagem</button>
     <script src="./mergeImages.js"></script>
+    <script src="../node_modules/jszip/dist/jszip.min.js"></script>
+    <script src="../node_modules/file-saver/dist/FileSaver.min.js"></script>
 </body>
 
 </html>
