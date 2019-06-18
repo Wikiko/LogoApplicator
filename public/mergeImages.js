@@ -57,9 +57,7 @@
         }))
             .then(() => zip
                 .generateAsync({type: 'blob'})
-                .then(content => {
-                    saveAs(content, 'midiakit.zip');
-                }));
+                .then(content => saveAs(content, 'midiakit.zip')));
 
     }
 
