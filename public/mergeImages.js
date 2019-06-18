@@ -1,6 +1,8 @@
 (function () {
     var maxHeight = 92;
     var maxWidth = 420;
+    
+    // var loader = document.getElementById('loading');
 
     var defaultPosition = {
         x: 50,
@@ -13,6 +15,21 @@
 
     function downloadImage() {
         var zip = new JSZip();
+
+        if (images === null) {
+            alert('Houve um erro no carregamento das imagens do midia kit.');
+            return;
+        }
+        if (images.length === 0) {
+            alert('Não há midia kits disponíveis atualmente.');
+            return;
+        }
+        if (selectedImage === null) {
+            alert('Houve um problema ao selecionar seu logo.');
+            return;
+        }
+        
+        // loader.hidden = false;
 
         Promise.all(images.map((image, index) => {
             var canvas = document.createElement('canvas');
@@ -36,7 +53,12 @@
         }))
             .then(() => zip
                 .generateAsync({type: 'blob'})
-                .then(content => saveAs(content, 'midiakit.zip')));
+                .then(content => {
+                    const saveInstance = saveAs(content, 'midiakit.zip');
+                    // saveInstance.onwriteend = function () {
+                    //     loader.hidden = true;
+                    // }
+                }));
 
     }
 
