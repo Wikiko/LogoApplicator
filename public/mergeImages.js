@@ -8,12 +8,17 @@
     };
 
     var imagesNode = document.getElementsByClassName('midia-kit');
-    
+
     var images = Object.keys(imagesNode).map(key => imagesNode[key]);
 
     var selectedImage = null;
 
     function downloadImage() {
+
+        function last(array) {
+            return array[array.length - 1];
+        }
+
         var zip = new JSZip();
 
         if (images === null) {
@@ -29,7 +34,7 @@
             return;
         }
 
-        Promise.all(images.map((image, index) => {
+        Promise.all(images.map(image => {
             var canvas = document.createElement('canvas');
             var canvasContext = canvas.getContext('2d');
 
@@ -44,9 +49,10 @@
 
             return new Promise(resolve => {
                 canvas.toBlob(blob => {
-                    zip.file('image' + index + '.png', blob);
+                    var imageName = last(image.src.split('/'));
+                    zip.file(imageName + '.png', blob);
                     resolve();
-                }, 'image/png')
+                }, 'image/png');
             });
         }))
             .then(() => zip
@@ -61,16 +67,16 @@
         return c * b / a;
     }
 
-    function getNewMeasures(img) {
-        if (img.height / maxHeight > img.width / maxWidth) {
+    function getNewMeasures(image) {
+        if (image.height / maxHeight > image.width / maxWidth) {
             return {
-                width: threeRule(img.height, maxHeight, img.width),
+                width: threeRule(image.height, maxHeight, image.width),
                 height: maxHeight
             };
         }
         return {
             width: maxWidth,
-            height: threeRule(img.width, maxWidth, img.height)
+            height: threeRule(image.width, maxWidth, image.height)
         };
     }
 
