@@ -7,30 +7,36 @@
         y: 885
     };
 
-    var isAppliedWatermark = false;
+    var images = null;
 
-    var listOfCanvasToApplyLogo = [];
+    var selectedImage = null;
 
     function downloadImage() {
         var zip = new JSZip();
 
-        var promisesToWait = listOfCanvasToApplyLogo.map((canvas, index) => {
-            return new Promise(resolve => {
-                canvas.toBlob(resolve, 'image/jpeg');
-            })
-                .then(blob => {
-                    zip.file('image' + index + '.jpg', blob);
-                    console.log('feito', 'image' + index + '.jpg');
-                });
-        });
+        Promise.all(images.map((image, index) => {
+            var canvas = document.createElement('canvas');
+            var canvasContext = canvas.getContext('2d');
 
-        Promise.all(promisesToWait)
-            .then(() => {
-                zip.generateAsync({type: 'blob'})
-                    .then(function (content) {
-                        saveAs(content, 'midiakit.zip');
-                    });
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            const measures = getNewMeasures(selectedImage);
+
+            canvasContext.drawImage(image, 0, 0);
+
+            canvasContext.drawImage(selectedImage, defaultPosition.x, defaultPosition.y, measures.width, measures.height);
+
+            return new Promise(resolve => {
+                canvas.toBlob(blob => {
+                    zip.file('image' + index + '.jpg', blob);
+                    resolve();
+                }, 'image/png')
             });
+        }))
+            .then(() => zip
+                .generateAsync({type: 'blob'})
+                .then(content => saveAs(content, 'midiakit.zip')));
 
     }
 
@@ -51,13 +57,6 @@
         };
     }
 
-    function prepareToApply() {
-        if (isAppliedWatermark) {
-            return init();
-        }
-        return Promise.resolve();
-    }
-
     function handleFileSelect(event) {
         var file = event.target.files[0];
 
@@ -65,54 +64,33 @@
             throw Error('File is not an image');
         }
 
-        prepareToApply()
-            .then(() => {
+        var imgSelected = new Image();
 
-                var imgSelected = new Image();
+        imgSelected.onload = function () {
+            selectedImage = imgSelected;
+        };
 
-                imgSelected.onload = function () {
-                    const measures = getNewMeasures(imgSelected);
-                    listOfCanvasToApplyLogo.forEach(canvas => {
-                        console.log('processando...');
-                        var canvasContext = canvas.getContext('2d');
-                        canvasContext.drawImage(imgSelected, defaultPosition.x, defaultPosition.y, measures.width, measures.height);
-                    })
-                };
-
-                imgSelected.src = URL.createObjectURL(file);
-                isAppliedWatermark = true;
-            });
+        imgSelected.src = URL.createObjectURL(file);
     }
 
-    function generateCanvasFromImagePath(imagePath) {
+    function createImageFromPath(path) {
         return new Promise(resolve => {
-            var canvas = document.createElement('canvas');
-            var canvasContext = canvas.getContext('2d');
-
             var image = new Image();
             image.onload = function () {
-                canvas.width = image.width;
-                canvas.height = image.height;
-
-                canvasContext.drawImage(image, 0, 0);
-                resolve(canvas);
+                resolve(image);
             };
-            image.src = imagePath;
+            image.src = path;
         });
     }
 
     function init() {
-        listOfCanvasToApplyLogo = [];
         return fetch('http://localhost:3000/midiakits')
             .then(response => response.json())
             .then(imageNames => imageNames
                 .map(imageName => './imgs/midiakit/' + imageName))
-            .then(imagePaths => {
-                return Promise.all(imagePaths.map(generateCanvasFromImagePath))
-                    .then(canvasList => {
-                        listOfCanvasToApplyLogo = canvasList;
-                        isAppliedWatermark = false;
-                    });
+            .then(imagePaths => Promise.all(imagePaths.map(createImageFromPath)))
+            .then(imagesCreated => {
+                images = imagesCreated;
             });
     }
 
