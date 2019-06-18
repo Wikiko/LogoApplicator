@@ -1,8 +1,6 @@
 (function () {
     var maxHeight = 92;
     var maxWidth = 420;
-    
-    // var loader = document.getElementById('loading');
 
     var defaultPosition = {
         x: 50,
@@ -30,8 +28,6 @@
             alert('Houve um problema ao selecionar seu logo.');
             return;
         }
-        
-        // loader.hidden = false;
 
         Promise.all(images.map((image, index) => {
             var canvas = document.createElement('canvas');
@@ -48,7 +44,7 @@
 
             return new Promise(resolve => {
                 canvas.toBlob(blob => {
-                    zip.file('image' + index + '.jpg', blob);
+                    zip.file('image' + index + '.png', blob);
                     resolve();
                 }, 'image/png')
             });
@@ -56,10 +52,7 @@
             .then(() => zip
                 .generateAsync({type: 'blob'})
                 .then(content => {
-                    var saveInstance = saveAs(content, 'midiakit.zip');
-                    // saveInstance.onwriteend = function () {
-                    //     loader.hidden = true;
-                    // }
+                    saveAs(content, 'midiakit.zip');
                 }));
 
     }
@@ -96,29 +89,6 @@
 
         imgSelected.src = URL.createObjectURL(file);
     }
-
-    // function createImageFromPath(path) {
-    //     return new Promise(resolve => {
-    //         var image = new Image();
-    //         image.onload = function () {
-    //             resolve(image);
-    //         };
-    //         image.src = path;
-    //     });
-    // }
-
-    // function init() {
-    //     return fetch('http://localhost:3000/midiakits')
-    //         .then(response => response.json())
-    //         .then(imageNames => imageNames
-    //             .map(imageName => './imgs/midiakit/' + imageName))
-    //         .then(imagePaths => Promise.all(imagePaths.map(createImageFromPath)))
-    //         .then(imagesCreated => {
-    //             images = imagesCreated;
-    //         });
-    // }
-
-    // document.body.onload = init;
 
     document.getElementById('files').onchange = handleFileSelect;
     document.getElementById('downloadImage').onclick = downloadImage;
