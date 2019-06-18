@@ -9,7 +9,9 @@
         y: 885
     };
 
-    var images = null;
+    var imagesNode = document.getElementsByClassName('midia-kit');
+    
+    var images = Object.keys(imagesNode).map(key => imagesNode[key]);
 
     var selectedImage = null;
 
@@ -54,7 +56,7 @@
             .then(() => zip
                 .generateAsync({type: 'blob'})
                 .then(content => {
-                    const saveInstance = saveAs(content, 'midiakit.zip');
+                    var saveInstance = saveAs(content, 'midiakit.zip');
                     // saveInstance.onwriteend = function () {
                     //     loader.hidden = true;
                     // }
@@ -95,28 +97,28 @@
         imgSelected.src = URL.createObjectURL(file);
     }
 
-    function createImageFromPath(path) {
-        return new Promise(resolve => {
-            var image = new Image();
-            image.onload = function () {
-                resolve(image);
-            };
-            image.src = path;
-        });
-    }
+    // function createImageFromPath(path) {
+    //     return new Promise(resolve => {
+    //         var image = new Image();
+    //         image.onload = function () {
+    //             resolve(image);
+    //         };
+    //         image.src = path;
+    //     });
+    // }
 
-    function init() {
-        return fetch('http://localhost:3000/midiakits')
-            .then(response => response.json())
-            .then(imageNames => imageNames
-                .map(imageName => './imgs/midiakit/' + imageName))
-            .then(imagePaths => Promise.all(imagePaths.map(createImageFromPath)))
-            .then(imagesCreated => {
-                images = imagesCreated;
-            });
-    }
+    // function init() {
+    //     return fetch('http://localhost:3000/midiakits')
+    //         .then(response => response.json())
+    //         .then(imageNames => imageNames
+    //             .map(imageName => './imgs/midiakit/' + imageName))
+    //         .then(imagePaths => Promise.all(imagePaths.map(createImageFromPath)))
+    //         .then(imagesCreated => {
+    //             images = imagesCreated;
+    //         });
+    // }
 
-    document.body.onload = init;
+    // document.body.onload = init;
 
     document.getElementById('files').onchange = handleFileSelect;
     document.getElementById('downloadImage').onclick = downloadImage;
