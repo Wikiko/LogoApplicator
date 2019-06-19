@@ -1,51 +1,82 @@
-(function () {
-    var maxHeight = 92;
-    var maxWidth = 420;
+function WatermarkApplicator() {
+    var maxHeightWatermark = null;
+    var maxWidthWatermark = null;
+    var imagesToApply = null;
+    var watermarkImage = null;
+    var watermarkPosition = null;
 
-    var defaultPosition = {
-        x: 50,
-        y: 885
-    };
-
-    var imagesNode = document.getElementsByClassName('midia-kit');
-
-    var images = Object.keys(imagesNode).map(key => imagesNode[key]);
-
-    var selectedImage = null;
-
-    function downloadImage() {
-
-        function last(array) {
-            return array[array.length - 1];
+    function getNewMeasures(image) {
+        if (image.height / maxHeightWatermark > image.width / maxWidthWatermark) {
+            return {
+                width: threeRule(image.height, maxHeightWatermark, image.width),
+                height: maxHeightWatermark
+            };
         }
+        return {
+            width: maxWidthWatermark,
+            height: threeRule(image.width, maxWidthWatermark, image.height)
+        };
+    }
 
+    function threeRule(a, b, c) {
+        return c * b / a;
+    }
+
+    function setWatermarkPosition(x, y) {
+        watermarkPosition = {
+            x,
+            y
+        }
+    }
+
+    function setWatermarkImage(image) {
+        watermarkImage = image;
+    }
+
+    function setImagesToApply(images) {
+        imagesToApply = images;
+    }
+
+    function setMaxWidthWatermark(maxWidth) {
+        maxWidthWatermark = maxWidth;
+    }
+
+    function setMaxHeightWatermark(maxHeight) {
+        maxHeightWatermark = maxHeight;
+    }
+
+    function last(array) {
+        return array[array.length - 1];
+    }
+
+    function applyAndDownload() {
         var zip = new JSZip();
 
-        if (images === null) {
+        if (imagesToApply === null) {
             alert('Houve um erro no carregamento das imagens do midia kit.');
             return;
         }
-        if (images.length === 0) {
+        if (imagesToApply.length === 0) {
             alert('Não há midia kits disponíveis atualmente.');
             return;
         }
-        if (selectedImage === null) {
+        if (watermarkImage === null) {
             alert('Houve um problema ao selecionar seu logo.');
             return;
         }
 
-        Promise.all(images.map(image => {
+        return Promise.all(imagesToApply.map(image => {
             var canvas = document.createElement('canvas');
             var canvasContext = canvas.getContext('2d');
 
             canvas.width = image.width;
             canvas.height = image.height;
 
-            const measures = getNewMeasures(selectedImage);
+            const measures = getNewMeasures(watermarkImage);
 
             canvasContext.drawImage(image, 0, 0);
 
-            canvasContext.drawImage(selectedImage, defaultPosition.x, defaultPosition.y, measures.width, measures.height);
+            canvasContext.drawImage(watermarkImage, watermarkPosition.x, watermarkPosition.y, measures.width, measures.height);
 
             return new Promise(resolve => {
                 canvas.toBlob(blob => {
@@ -58,43 +89,52 @@
             .then(() => zip
                 .generateAsync({type: 'blob'})
                 .then(content => saveAs(content, 'midiakit.zip')));
-
     }
 
-    function threeRule(a, b, c) {
-        return c * b / a;
+    return {
+        setWatermarkImage,
+        setWatermarkPosition,
+        setImagesToApply,
+        setMaxWidthWatermark,
+        setMaxHeightWatermark,
+        applyAndDownload
+    };
+}
+
+var maxHeight = 92;
+var maxWidth = 420;
+
+var defaultPosition = {
+    x: 50,
+    y: 885
+};
+
+var imagesNode = document.getElementsByClassName('midia-kit');
+
+var images = Object.keys(imagesNode).map(key => imagesNode[key]);
+
+var waterMarkApplicator = WatermarkApplicator();
+
+waterMarkApplicator.setImagesToApply(images);
+waterMarkApplicator.setWatermarkPosition(defaultPosition.x, defaultPosition.y);
+waterMarkApplicator.setMaxWidthWatermark(maxWidth);
+waterMarkApplicator.setMaxHeightWatermark(maxHeight);
+
+function handleFileSelect(event) {
+    var file = event.target.files[0];
+
+    if (!file.type.match('image.*')) {
+        throw Error('File is not an image');
     }
 
-    function getNewMeasures(image) {
-        if (image.height / maxHeight > image.width / maxWidth) {
-            return {
-                width: threeRule(image.height, maxHeight, image.width),
-                height: maxHeight
-            };
-        }
-        return {
-            width: maxWidth,
-            height: threeRule(image.width, maxWidth, image.height)
-        };
-    }
+    var imgSelected = new Image();
 
-    function handleFileSelect(event) {
-        var file = event.target.files[0];
+    imgSelected.onload = function () {
+        waterMarkApplicator.setWatermarkImage(imgSelected);
+    };
 
-        if (!file.type.match('image.*')) {
-            throw Error('File is not an image');
-        }
+    imgSelected.src = URL.createObjectURL(file);
+}
 
-        var imgSelected = new Image();
-
-        imgSelected.onload = function () {
-            selectedImage = imgSelected;
-        };
-
-        imgSelected.src = URL.createObjectURL(file);
-    }
-
-    document.getElementById('files').onchange = handleFileSelect;
-    document.getElementById('downloadImage').onclick = downloadImage;
-
-})();
+document.getElementById('files').onchange = handleFileSelect;
+document.getElementById('downloadImage').onclick = waterMarkApplicator.applyAndDownload;
