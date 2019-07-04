@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0582db86-0ba3-4923-9e0a-fff1bd4a76c0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mergeImages.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/mergeImages.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -19,11 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/mergeImages.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="130" lean-forward="true" selection-start-line="130" selection-end-line="130" />
-              <folding>
-                <element signature="n#!!block;n#WatermarkApplicator#0" />
-              </folding>
+            <state relative-caret-position="353">
+              <caret line="39" column="45" lean-forward="true" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -83,6 +79,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -117,7 +114,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -186,7 +182,9 @@
       <workItem from="1560511634276" duration="2903000" />
       <workItem from="1560534536215" duration="4701000" />
       <workItem from="1560542239737" duration="28771000" />
-      <workItem from="1560885603078" duration="3596000" />
+      <workItem from="1560885603078" duration="4735000" />
+      <workItem from="1562246996382" duration="150000" />
+      <workItem from="1562252637221" duration="113000" />
     </task>
     <task id="LOCAL-00001" summary="First Commit">
       <created>1560780253319</created>
@@ -258,17 +256,24 @@
       <option name="project" value="LOCAL" />
       <updated>1560886890542</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Criado uma closure de aplicação de logo.">
+      <created>1560948428681</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1560948428681</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39971000" />
+    <option name="totallyTimeSpent" value="41373000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1670" height="981" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4977778" weight="0.10005266" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4977778" visible="true" weight="0.21649484" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" sideWeight="0.50222224" side_tool="true" weight="0.09933036" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -301,7 +306,8 @@
     <MESSAGE value="Alterado a forma de aplicação." />
     <MESSAGE value="Alteração para estágio." />
     <MESSAGE value="Pegando nome da própria imagem como nome para salvar no zip." />
-    <option name="LAST_COMMIT_MESSAGE" value="Pegando nome da própria imagem como nome para salvar no zip." />
+    <MESSAGE value="Criado uma closure de aplicação de logo." />
+    <option name="LAST_COMMIT_MESSAGE" value="Criado uma closure de aplicação de logo." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/public/casamineira.png" />
@@ -356,11 +362,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/mergeImages.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="130" lean-forward="true" selection-start-line="130" selection-end-line="130" />
-          <folding>
-            <element signature="n#!!block;n#WatermarkApplicator#0" />
-          </folding>
+        <state relative-caret-position="353">
+          <caret line="39" column="45" lean-forward="true" selection-start-line="39" selection-start-column="45" selection-end-line="39" selection-end-column="45" />
         </state>
       </provider>
     </entry>
