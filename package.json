@@ -7,7 +7,7 @@
     "start": "node src/index.js"
   },
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "file-saver": "^2.0.2",
     "jszip": "^3.2.1"
   }
